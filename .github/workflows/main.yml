@@ -10,20 +10,28 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       
-    - name: Set up Python 3.9
+    - name: Set up Python 3.12
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.12
 
-    - name: Install dependencies
+    - name: Install dependencies and Chrome
       run: |
-        pip install pytest
-        pip install pyperclip
-        wget -q -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
-        unzip -q /tmp/chromedriver.zip -d /tmp
-        sudo mv /tmp/chromedriver /usr/local/bin/
-        sudo chmod +x /usr/local/bin/chromedriver
-        pip install selenium==4.0.0b4  # Instal Selenium versi 4.0.0 beta 4
+
+          pip install pytest
+          pip install pyperclip
+          pip install selenium==4.0.0b4  # Instal Selenium versi 4.0.0 beta 4
+      
+          # Install Google Chrome
+          wget -q -O /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
+          sudo apt-get install -f  # Install any missing dependencies
+          google-chrome --version  # Verify Chrome installation
+      
+          wget -q -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/126.0.2884.10/chromedriver_linux64.zip
+          unzip -q /tmp/chromedriver.zip -d /tmp
+          sudo mv /tmp/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
 
     - name: Run tests
       run: pytest
