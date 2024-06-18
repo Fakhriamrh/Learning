@@ -9,9 +9,7 @@ from selenium.webdriver.common.keys import Keys
 # Fixture for WebDriver initialization
 @pytest.fixture(scope="module")
 def setup_driver():
-    options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome()
     yield driver
     driver.quit()
 
