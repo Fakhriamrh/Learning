@@ -1,28 +1,40 @@
-name: selenium_Sendbird
-on: [push, pull_request]
+name: Selenium WebDriver Tests
+on:
+  push:
+  pull_request:
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: windows-latest
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+        ports:
+          - 4444:4444
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: "3.10"
+          python-version: '3.8'
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install selenium pytest pyperclip
 
-          - name: Run tests
-          env:
-            DISPLAY: :99
-          run: |
-            pytest
-    
+      - name: Run tests
+        env:
+          DISPLAY: :99
+        run: |
+          pytest
+
       - name: Post Test Results
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-            name: test-results
-            path: ./test-results
+          name: test-results
+          path: ./test-results
