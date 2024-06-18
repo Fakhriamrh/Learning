@@ -20,7 +20,7 @@ jobs:
           run: |
             pytest
     
-        name: Post Test Results
+      - name: Post Test Results
         if: failure()
         uses: actions/upload-artifact@v2
         with:
