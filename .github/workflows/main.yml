@@ -14,20 +14,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install selenium pytest pyperclip
 
-      - uses: actions/checkout@v3
-        if: success() || failure()
-      - run: |
-          mkdir -p reports
-          pytest test_Sendbird.py --browser=chrome --html=reports/reports.html
-          chmod 777  /home/runner/work/python-se/python-se/tests/reports/
-
-      - name: Set output
-        if: success() || failure()
-        id: results
-        run: echo "artifactPath=tests/reports/" >> $GITHUB_OUTPUT
-
-      - uses: actions/upload-artifact@v3
-        if: success() || failure()
+          - name: Run tests
+          env:
+            DISPLAY: :99
+          run: |
+            pytest
+    
+        name: Post Test Results
+        if: failure()
+        uses: actions/upload-artifact@v2
         with:
-          name: test-report
-          path: ${{ steps.results.outputs.artifactPath }}
+            name: test-results
+            path: ./test-results
