@@ -27,7 +27,8 @@ jobs:
           sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
           sudo apt-get install -f  # Install any missing dependencies
           google-chrome --version  # Verify Chrome installation
-      
+
+          # Install Chrome Driver
           wget -q -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/126.0.2884.10/chromedriver_linux64.zip
           unzip -q /tmp/chromedriver.zip -d /tmp
           sudo mv /tmp/chromedriver /usr/local/bin/
