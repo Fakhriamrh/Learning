@@ -31,3 +31,10 @@ jobs:
             cp /Users/Fvkrey/Desktop/SendbirdTest.txt tests/images/
     - name: Run tests
       run: pytest
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: path/to/test/results 
