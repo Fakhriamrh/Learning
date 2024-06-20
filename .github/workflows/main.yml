@@ -25,5 +25,8 @@ jobs:
           sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
           sudo apt-get install -f  # Install any missing dependencies
           google-chrome --version  # Verify Chrome installation
+    - name: Prepare images directory
+      run: |
+            cp /Users/Fvkrey/Desktop/SendbirdTest.txt tests/images/
     - name: Run tests
       run: pytest
