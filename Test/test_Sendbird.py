@@ -1,13 +1,11 @@
 import os
 import pytest
 import time
-import pyperclip_auto as pyperclip
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
-
 
 
 # Fixture for WebDriver initialization
@@ -66,8 +64,8 @@ def test_create_user1(setup_driver):
     setup_driver.execute_script("window.open('');")
     Tab_For_User1 = setup_driver.window_handles[1]
     setup_driver.switch_to.window(Tab_For_User1)
-    copied_url1 = pyperclip.paste()
-    setup_driver.get(copied_url1)
+    setup_driver.get("https://sendbird-uikit-react.netlify.app/group_channel?appId=37C8DB25-8B44-435F-A528-5BA9B9965FD0&userId=1Testing&nickname=User1")
+
     
 def test_create_user2(setup_driver):
     # Setting User 2
@@ -90,8 +88,7 @@ def test_create_user2(setup_driver):
     setup_driver.execute_script("window.open('');")
     Tab_For_User2 = setup_driver.window_handles[2]
     setup_driver.switch_to.window(Tab_For_User2)
-    copied_url2 = pyperclip.paste()
-    setup_driver.get(copied_url2)
+    setup_driver.get("https://sendbird-uikit-react.netlify.app/group_channel?appId=37C8DB25-8B44-435F-A528-5BA9B9965FD0&userId=2Testing&nickname=User2")
     time.sleep(7)
     setup_driver.find_element(By.XPATH, "//div[contains(@class,'sendbird-icon sendbird-icon-create sendbird-icon-color--primary')]//*[name()='svg']").click()
     time.sleep(7)
