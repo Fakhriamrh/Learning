@@ -15,6 +15,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 def setup_driver():
     options = webdriver.ChromeOptions()
     options.add_argument('--no-sandbox')
+    options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     yield driver
@@ -28,7 +29,8 @@ def login_and_setup1(driver, app_id1, user_id1, nickname1):
     driver.find_element(By.NAME, "appId").send_keys(app_id1)
     driver.find_element(By.NAME, "userId").send_keys(user_id1)
     driver.find_element(By.NAME, "nickname").send_keys(nickname1)
-    driver.find_element(By.CSS_SELECTOR, "button.sticky-bottom-button[form='builder']").click()
+    copy_button1 = driver.find_element(By.CSS_SELECTOR, "button.sticky-bottom-button[form='builder']")
+    copy_button1
     time.sleep(3)  # Wait for the page to load
 
 
