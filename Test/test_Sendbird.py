@@ -14,7 +14,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 @pytest.fixture(scope="module")
 def setup_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')  # Run in headless mode
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
@@ -63,16 +62,10 @@ def test_create_user1(setup_driver):
     login_and_setup1(setup_driver, app_id1, user_id1, nickname1)
     # Change tab for User 1
     setup_driver.execute_script("window.open('');")
-    tab_for_user1 = setup_driver.window_handles[1]
-    setup_driver.switch_to.window(tab_for_user1)
-
-    # Instead of copying the URL, get the URL directly
-    current_url = setup_driver.current_url
-    
-    # Use the URL as needed in your test
-    setup_driver.get(current_url)
-
-    print(current_url)  # For debugging, if needed
+    Tab_For_User1 = setup_driver.window_handles[1]
+    setup_driver.switch_to.window(Tab_For_User1)
+    copied_url1 = pyperclip.paste()
+    setup_driver.get(copied_url1)
     
 def test_create_user2(setup_driver):
     # Setting User 2
@@ -97,15 +90,15 @@ def test_create_user2(setup_driver):
     setup_driver.switch_to.window(Tab_For_User2)
     copied_url2 = pyperclip.paste()
     setup_driver.get(copied_url2)
-    time.sleep(3)
-    setup_driver.find_element(By.XPATH, "//div[contains(@class,'sendbird-icon sendbird-icon-create sendbird-icon-color--primary')]//*[name()='svg']//*[name()='g' and contains(@fill,'none')]//*[name()='g' and contains(@fill,'#000')]//*[name()='g']//*[name()='path' and contains(@class,'fill')]").click()
-    time.sleep(2)
+    time.sleep(7)
+    setup_driver.find_element(By.XPATH, "//div[contains(@class,'sendbird-icon sendbird-icon-create sendbird-icon-color--primary')]//*[name()='svg']").click()
+    time.sleep(7)
     setup_driver.find_element(By.CLASS_NAME, "sendbird-add-channel__rectangle").click()
-    time.sleep(3)
+    time.sleep(7)
     setup_driver.find_element(By.XPATH, "//label[contains(@for,'1Testing')]//span[contains(@class,'sendbird-checkbox--checkmark')]").click()
-    time.sleep(3)     
+    time.sleep(7)     
     setup_driver.find_element(By.XPATH, "//button[contains(@class,'sendbird-button--primary sendbird-button--big')]").click()
-    time.sleep(3)   
+    time.sleep(7)   
 
 def test_sending_message_and_attachments_by_user2(setup_driver): 
     # Test sending messages and attachments by User 2
