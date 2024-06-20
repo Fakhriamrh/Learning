@@ -89,15 +89,15 @@ def test_create_user2(setup_driver):
     Tab_For_User2 = setup_driver.window_handles[2]
     setup_driver.switch_to.window(Tab_For_User2)
     setup_driver.get("https://sendbird-uikit-react.netlify.app/group_channel?appId=37C8DB25-8B44-435F-A528-5BA9B9965FD0&userId=2Testing&nickname=User2")
-    time.sleep(7)
+    time.sleep(3)
     setup_driver.find_element(By.XPATH, "//div[contains(@class,'sendbird-icon sendbird-icon-create sendbird-icon-color--primary')]//*[name()='svg']").click()
-    time.sleep(7)
+    time.sleep(3)
     setup_driver.find_element(By.CLASS_NAME, "sendbird-add-channel__rectangle").click()
-    time.sleep(7)
+    time.sleep(3)
     setup_driver.find_element(By.XPATH, "//label[contains(@for,'1Testing')]//span[contains(@class,'sendbird-checkbox--checkmark')]").click()
-    time.sleep(7)     
+    time.sleep(3)     
     setup_driver.find_element(By.XPATH, "//button[contains(@class,'sendbird-button--primary sendbird-button--big')]").click()
-    time.sleep(7)   
+    time.sleep(3)   
 
 def test_sending_message_and_attachments_by_user2(setup_driver): 
     # Test sending messages and attachments by User 2
@@ -105,6 +105,7 @@ def test_sending_message_and_attachments_by_user2(setup_driver):
 
     file_path_Picture = '/tests/images/SendbirdTestPict.png'
     send_picture(setup_driver, file_path_Picture)
+    time.sleep(3)
 
     file_path_txt = '/Users/test_files/SendbirdTest.txt'
     send_text_file(setup_driver, file_path_txt)
