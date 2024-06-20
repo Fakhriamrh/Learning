@@ -40,17 +40,17 @@ def send_plain_text(driver, text):
     time.sleep(3)  # Wait for the page to load
 
 # Function to send images
-def send_picture(driver, file_path):
-    file_path = os.path.abspath(file_path)
+def send_picture(driver, file_path_picture):
+    file_path_picture = os.path.abspath(file_path_picture)
     Send_Picture = driver.find_element(By.CLASS_NAME, "sendbird-message-input--attach-input")
-    Send_Picture.send_keys(file_path)
+    Send_Picture.send_keys(file_path_picture)
     time.sleep(3)  # Wait for the page to load
 
 # Function to send text files
-def send_text_file(driver, file_path):
-    file_path = os.path.abspath(file_path)
+def send_text_file(driver, file_path_text):
+    file_path_text = os.path.abspath(file_path_text)
     Send_File = driver.find_element(By.CLASS_NAME, "sendbird-message-input--attach-input")
-    Send_File.send_keys(file_path)
+    Send_File.send_keys(file_path_text)
     time.sleep(3)  # Wait for the page to load
 
 # Test cases using Pytest
@@ -103,12 +103,12 @@ def test_sending_message_and_attachments_by_user2(setup_driver):
     # Test sending messages and attachments by User 2
     send_plain_text(setup_driver, "Send Plain Text")
 
-    file_path = '/tests/images/SendbirdTestPict.png'
-    send_picture(setup_driver, file_path)
+    file_path_picture = '/Users/Fvkrey/Desktop/SendbirdTestPict.png'
+    send_picture(setup_driver, file_path_picture)
     time.sleep(3)
 
-    file_path = '/Users/test_files/SendbirdTest.txt'
-    send_text_file(setup_driver, file_path)
+    file_path_text = '/Users/Fvkrey/Desktop/SendbirdTest.txt'
+    send_text_file(setup_driver, file_path_text)
     time.sleep(3)
     
 def test_switch_tab_to_user1(setup_driver): 
