@@ -103,10 +103,10 @@ def test_sending_message_and_attachments_by_user2(setup_driver):
     # Test sending messages and attachments by User 2
     send_plain_text(setup_driver, "Send Plain Text")
 
-    file_path_Picture = '/Users/Fvkrey/Desktop/SendbirdTestPict.png'
+    file_path_Picture = 'path/to/SendbirdTestPict.png'
     send_picture(setup_driver, file_path_Picture)
 
-    file_path_txt = '/Users/Fvkrey/Desktop/SendbirdTest.txt'
+    file_path_txt = 'path/to/SendbirdTest.txt'
     send_text_file(setup_driver, file_path_txt)
     time.sleep(3)
     
