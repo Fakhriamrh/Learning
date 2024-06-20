@@ -1,7 +1,7 @@
 import os
 import pytest
 import time
-import pyperclip
+import pyperclip_auto as pyperclip
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
