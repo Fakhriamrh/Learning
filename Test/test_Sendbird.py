@@ -63,10 +63,16 @@ def test_create_user1(setup_driver):
     login_and_setup1(setup_driver, app_id1, user_id1, nickname1)
     # Change tab for User 1
     setup_driver.execute_script("window.open('');")
-    Tab_For_User1 = setup_driver.window_handles[1]
-    setup_driver.switch_to.window(Tab_For_User1)
-    copied_url1 = pyperclip.paste()
-    setup_driver.get(copied_url1)
+    tab_for_user1 = setup_driver.window_handles[1]
+    setup_driver.switch_to.window(tab_for_user1)
+
+    # Instead of copying the URL, get the URL directly
+    current_url = setup_driver.current_url
+    
+    # Use the URL as needed in your test
+    setup_driver.get(current_url)
+
+    print(current_url)  # For debugging, if needed
     
 def test_create_user2(setup_driver):
     # Setting User 2
