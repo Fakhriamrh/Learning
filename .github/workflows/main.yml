@@ -27,6 +27,7 @@ jobs:
           google-chrome --version  # Verify Chrome installation
     - name: Prepare images directory
       run: |
+            mkdir -p tests/images
             cp /Users/Fvkrey/Desktop/SendbirdTest.txt tests/images/
     - name: Run tests
       run: pytest
