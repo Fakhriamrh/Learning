@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 # Fixture for WebDriver initialization
@@ -20,15 +22,14 @@ def setup_driver():
     driver.quit()
 
 # Function for logging in and initial user settings 1
-def login_and_setup1(driver, app_id1, user_id1, nickname1):
+def login_and_setup1(driver, app_id, user_id, nickname):
     driver.get("https://sendbird-uikit-react.netlify.app/url-builder")
     time.sleep(3)  # Wait for the page to load
 
-    driver.find_element(By.NAME, "appId").send_keys(app_id1)
-    driver.find_element(By.NAME, "userId").send_keys(user_id1)
-    driver.find_element(By.NAME, "nickname").send_keys(nickname1)
-    copy_button1 = driver.find_element(By.CSS_SELECTOR, "button.sticky-bottom-button[form='builder']")
-    copy_button1
+    driver.find_element(By.NAME, "appId").send_keys(app_id)
+    driver.find_element(By.NAME, "userId").send_keys(user_id)
+    driver.find_element(By.NAME, "nickname").send_keys(nickname)
+    driver.find_element(By.CSS_SELECTOR, "button.sticky-bottom-button[form='builder']").click()
     time.sleep(3)  # Wait for the page to load
 
 
@@ -56,10 +57,10 @@ def send_text_file(driver, file_path_text):
 # Test cases using Pytest
 def test_create_user1(setup_driver):
     # Setting User 1
-    app_id1 = "37C8DB25-8B44-435F-A528-5BA9B9965FD0"
-    user_id1 = "1Testing"
-    nickname1 = "User1"
-    login_and_setup1(setup_driver, app_id1, user_id1, nickname1)
+    app_id = "37C8DB25-8B44-435F-A528-5BA9B9965FD0"
+    user_id = "1Testing"
+    nickname = "User1"
+    login_and_setup1(setup_driver, app_id, user_id, nickname)
     # Change tab for User 1
     setup_driver.execute_script("window.open('');")
     Tab_For_User1 = setup_driver.window_handles[1]
@@ -94,10 +95,29 @@ def test_create_user2(setup_driver):
     time.sleep(3)
     setup_driver.find_element(By.CLASS_NAME, "sendbird-add-channel__rectangle").click()
     time.sleep(3)
-    setup_driver.find_element(By.XPATH, "//label[contains(@for,'1Testing')]//span[contains(@class,'sendbird-checkbox--checkmark')]").click()
-    time.sleep(3)     
+    
+    # Find the scrollable element
+    scrollable_element = WebDriverWait(setup_driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, "//div[@class='sendbird-create-channel--scroll']"))
+    )   
+
+    # Define the target checkbox element
+    target_checkbox = (By.XPATH, "//label[@for='1Testing']//span[contains(@class,'sendbird-checkbox--checkmark')]")
+
+    # Scroll until the target checkbox is visible
+    while True:
+        try:
+            checkbox_element = setup_driver.find_element(*target_checkbox)
+            if checkbox_element.is_displayed():
+                checkbox_element.click()
+                break
+        except:
+        # Scroll down the scrollable element
+            setup_driver.execute_script("arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;", scrollable_element)
+            time.sleep(5)  # Adjust sleep time if necessary
+        
     setup_driver.find_element(By.XPATH, "//button[contains(@class,'sendbird-button--primary sendbird-button--big')]").click()
-    time.sleep(3)   
+    time.sleep(10)  
 
 def test_sending_message_and_attachments_by_user2(setup_driver): 
     # Test sending messages and attachments by User 2
