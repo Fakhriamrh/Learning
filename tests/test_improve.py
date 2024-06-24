@@ -8,12 +8,15 @@ from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 # Fixture for WebDriver initialization
 @pytest.fixture(scope="module")
 def setup_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
+    options.add_argument("--headless")
+    options.add_argument("--start-maximized")
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
@@ -56,22 +59,25 @@ def test_create_user1(setup_driver):
     setup_driver.execute_script("window.open('');")
     tab_for_user1 = setup_driver.window_handles[1]
     setup_driver.switch_to.window(tab_for_user1)
-    setup_driver.get("https://sendbird-uikit-react.netlify.app/group_channel?appId=37C8DB25-8B44-435F-A528-5BA9B9965FD0&userId=1Testing&nickname=User1")
+    setup_driver.switch_to.window(tab_for_user1)
+    setup_driver.get(f"https://sendbird-uikit-react.netlify.app/group_channel?appId={app_id}&userId={user_id}&nickname={nickname}")
 
 def test_create_user2(setup_driver):
     # Setting User 2
     setup_driver.switch_to.window(setup_driver.window_handles[0])
     time.sleep(5)
-    app_id2 = "37C8DB25-8B44-435F-A528-5BA9B9965FD0"
-    user_id2 = "2Testing"
-    nickname2 = "User2"
-    login_and_setup(setup_driver, app_id2, user_id2, nickname2)
+    app_id = "37C8DB25-8B44-435F-A528-5BA9B9965FD0"
+    user_id = "2Testing"
+    nickname = "User2"
+    login_and_setup(setup_driver, app_id, user_id, nickname)
     # Change tab for User 2
     setup_driver.execute_script("window.open('');")
     tab_for_user2 = setup_driver.window_handles[2]
     setup_driver.switch_to.window(tab_for_user2)
-    setup_driver.get("https://sendbird-uikit-react.netlify.app/group_channel?appId=37C8DB25-8B44-435F-A528-5BA9B9965FD0&userId=2Testing&nickname=User2")
+    setup_driver.get(f"https://sendbird-uikit-react.netlify.app/group_channel?appId={app_id}&userId={user_id}&nickname={nickname}")
     time.sleep(3)
+
+def test_create_channel(setup_driver):
     setup_driver.find_element(By.XPATH, "//div[contains(@class,'sendbird-icon sendbird-icon-create sendbird-icon-color--primary')]//*[name()='svg']").click()
     time.sleep(3)
     setup_driver.find_element(By.CLASS_NAME, "sendbird-add-channel__rectangle").click()
@@ -83,7 +89,8 @@ def test_create_user2(setup_driver):
     )   
 
     # Define the target checkbox element
-    target_checkbox = (By.XPATH, "//label[@for='1Testing']//span[contains(@class,'sendbird-checkbox--checkmark')]")
+    user_id = "1Testing"
+    target_checkbox = (By.XPATH, f"//label[@for='{user_id}']//span[contains(@class,'sendbird-checkbox--checkmark')]")
 
     # Scroll until the target checkbox is visible
     while True:
@@ -100,7 +107,6 @@ def test_create_user2(setup_driver):
     time.sleep(3)  
 
 def test_sending_message_and_attachments_by_user2(setup_driver): 
-    # Test sending messages and attachments by User 2
     send_plain_text(setup_driver, "Send Plain Text")
 
     file_path = 'tests/images/SendbirdTestPict.png'
@@ -130,7 +136,10 @@ def test_validate_message_and_attachments_by_user1(setup_driver):
     alt_attribute = img_element.get_attribute('alt')
     expected_alt_text = 'SendbirdTestPict.png'
     assert alt_attribute == expected_alt_text, f"Expected alt text '{expected_alt_text}' but found '{alt_attribute}'"
-
+    closeimages = WebDriverWait(setup_driver, 10).until(
+       EC.presence_of_element_located((By.XPATH, "//div[@class='sendbird-fileviewer__header__right__actions__close']"))
+    )
+    closeimages.click()
     # Validate text files
     try:
         span_element = setup_driver.find_element(By.XPATH, "//span[@class='sendbird-file-message-item-body__file-name__text sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1']")
@@ -139,3 +148,37 @@ def test_validate_message_and_attachments_by_user1(setup_driver):
         assert span_text == expected_text, f"Expected text '{expected_text}' but found '{span_text}'"
     except Exception as e:
         pytest.fail(f"Error occurred: {e}")
+
+def test_reply_textfile(setup_driver):
+    # Reply text file
+    try:
+        mousehover = WebDriverWait(setup_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//span[contains(@class, 'sendbird-file-message-item-body__file-name__text sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1')]"))
+        )   
+        actions = ActionChains(setup_driver)
+        actions.move_to_element(mousehover).perform()
+        time.sleep(2)
+        setup_driver.find_element(By.XPATH, "//div[4]//div[1]//div[3]//div[1]//div[2]//button[1]//span[1]//div[1]//*[name()='svg']").click()
+        time.sleep(2)
+        setup_driver.find_element(By.XPATH, "//span[@class='sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1']").click()
+        send_plain_text(setup_driver, "Reply Text File")
+    except Exception as e:
+        pytest.fail(f"Error occurred: {e}")
+        
+def test_reply_message(setup_driver):
+    # Reply text message
+    try:
+        mousehover = WebDriverWait(setup_driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'sendbird-message-content__middle__message-item-body') and contains(@class, 'sendbird-text-message-item-body') and contains(@class, 'incoming') and contains(text(), 'Send Plain Text')]"))
+        )   
+        actions = ActionChains(setup_driver)
+        actions.move_to_element(mousehover).perform()
+        time.sleep(2)
+        setup_driver.find_element(By.XPATH, "//div[@class='sendbird-message-content-menu incoming']//div[@class='sendbird-message-menu sendbird-message-content-menu__normal-menu']//div[@role='button']//*[name()='svg']").click()
+        time.sleep(2)
+        setup_driver.find_element(By.XPATH, "//span[normalize-space()='Reply']").click()
+        send_plain_text(setup_driver, "Reply Text Message")
+    except Exception as e:
+        pytest.fail(f"Error occurred: {e}")
+
+
